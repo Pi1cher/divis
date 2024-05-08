@@ -1,0 +1,52 @@
+.SpeechContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
+.SpeechRecognition{
+    position: absolute;
+}
+.SpeechRecognition:active {
+    border-radius: 50%;
+    animation: ripple-in 1s linear infinite; /* Анимация появления */
+}
+
+.SpeechRecognition:not(:active) {
+    animation: ripple-out 1s linear infinite; /* Анимация исчезновения */
+}
+
+@keyframes ripple-in {
+    from {
+        /* Начальное значение непрозрачности */
+        box-shadow: 0 0 0 0rem rgba(152, 251, 152, 0.2),
+        0 0 0 1rem rgba(152, 251, 152, 0.2),
+        0 0 0 2rem rgba(152, 251, 152, 0.2),
+        0 0 0 3rem rgba(152, 251, 152, 0.2);
+    }
+    to {
+ /* Конечное значение непрозрачности */
+        box-shadow: 0 0 0 1rem rgba(152, 251, 152, 0.2),
+        0 0 0 2rem rgba(152, 251, 152, 0.2),
+        0 0 0 3rem rgba(152, 251, 152, 0.2),
+        0 0 0 4rem rgba(152, 251, 152, 0.2);
+    }
+}
+
+@keyframes ripple-out {
+    from {
+         /* Начальное значение непрозрачности */
+        box-shadow: 0 0 0 1rem rgba(205, 92, 92, 0.2),
+        0 0 0 2rem rgba(205, 92, 92, 0.2),
+        0 0 0 3rem rgba(205, 92, 92, 0.2),
+        0 0 0 4rem rgba(205, 92, 92, 0);
+    }
+    to {
+         /* Конечное значение непрозрачности */
+        box-shadow: 0 0 0 0rem rgba(205, 92, 92, 0.2),
+        0 0 0 1rem rgba(205, 92, 92, 0.2),
+        0 0 0 2rem rgba(205, 92, 92, 0.2),
+        0 0 0 3rem rgba(205, 92, 92, 0.2);
+    }
+}

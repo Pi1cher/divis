@@ -6,12 +6,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001; // Используем порт из переменной окружения PORT, либо порт по умолчанию 3001
+const PORT = process.env.PORT || 3001;
 
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.json()); // Для обработки JSON-запросов
 
-app.get('/command', (req, res) => {
-    res.json({ message: 'Привет' });
+let postData = null;
+
+app.get('/api/data', (req, res) => {
+    res.json(postData);
+});
+
+app.post('/api/data', (req, res) => {
+    const { inputData } = req.body; // Предположим, что клиент отправляет данные в поле inputData
+    console.log('Полученные данные:', inputData);
+    postData = inputData    // Делаем что-то с полученными данными, например, сохраняем их в базу данных
+    res.json({ success: true }); // Отправляем ответ клиенту
 });
 
 app.get('*', (req, res) => {
