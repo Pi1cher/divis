@@ -10,12 +10,14 @@ interface IProps extends PropsWithChildren {
 
 const SpeechRecognition: FC<IProps> = () => {
     const [output, setOutput] = useState<string>('');
+    const [result, setResult] = useState<string>('');
+
     const recognitionRef = useRef<any>(null); // Ссылка на объект распознавания
 
     const startRecognition = () => {
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            setOutput('Ваш браузер не поддерживает API распознавания речи.');
+            setResult('Браузер не підтримує WebSpeechAPI')
             return;
         }
 
@@ -28,7 +30,7 @@ const SpeechRecognition: FC<IProps> = () => {
         };
 
         recognition.onerror = (event: any) => {
-            setOutput('Произошла ошибка при распознавании речи: ' + event.error);
+            setResult('Произошла ошибка при распознавании речи: ' + event.error);
         };
 
         recognition.start();
@@ -45,7 +47,7 @@ const SpeechRecognition: FC<IProps> = () => {
             // Если есть активное распознавание, останавливаем его
             recognitionRef.current.stop();
 
-            setOutput('Распознавание завершено.');
+            setResult('Розпізнавання завершено');
         }
 
     };
@@ -85,6 +87,7 @@ const SpeechRecognition: FC<IProps> = () => {
             </IconButton>
             <br/><br/><br/><br/>
             <div>{output}</div>
+            <div>{result}</div>
         </div>
     );
 };

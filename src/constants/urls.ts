@@ -1,4 +1,4 @@
-const baseURL = 'https://divis.adaptable.app/'
+const baseURL = 'https://diivis.adaptable.app/'
 
 const urls = {
     send: {
