@@ -1,7 +1,7 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import natural from 'natural';
+import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,50 +12,56 @@ const PORT = process.env.PORT || 3001;
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.json()); // Для обработки JSON-запросов
 
-let postData = null;
+const commandResultFilePath = path.join(__dirname, 'commandResult.txt');
 
-// Простой механизм обработки команд с использованием NLP для украинского и английского языков
+// Функция для чтения результата команды из файла
+const readCommandResultFromFile = () => {
+    try {
+        return fs.readFileSync(commandResultFilePath, 'utf8');
+    } catch (error) {
+        console.error('Ошибка чтения файла:', error);
+        return 'Unknown_command';
+    }
+};
+
+// Функция для записи результата команды в файл
+const writeCommandResultToFile = (result) => {
+    try {
+        fs.writeFileSync(commandResultFilePath, result, 'utf8');
+    } catch (error) {
+        console.error('Ошибка записи файла:', error);
+    }
+};
+
 const processCommand = (command) => {
-    const ukrainianTokenizer = new natural.UkrainianTokenizer();
-    const englishTokenizer = new natural.WordTokenizer();
-
-    const ukrainianTokens = ukrainianTokenizer.tokenize(command.toLowerCase());
-    const englishTokens = englishTokenizer.tokenize(command.toLowerCase());
-
-    let response;
-    if (ukrainianTokens.includes('включи') && ukrainianTokens.includes('лампочку')) {
+    let response = '';
+    if (command.toLowerCase().includes('включи') && command.toLowerCase().includes('лампочку')) {
         response = 'TURN_ON_LIGHT';
-    } else if (ukrainianTokens.includes('вимкни') && ukrainianTokens.includes('лампочку')) {
+    } else if (command.toLowerCase().includes('вимкни') && command.toLowerCase().includes('лампочку')) {
         response = 'TURN_OFF_LIGHT';
-    } else if (englishTokens.includes('turn') && englishTokens.includes('on') && englishTokens.includes('light')) {
+    } else if (command.toLowerCase().includes('turn') && command.toLowerCase().includes('on') && command.toLowerCase().includes('light')) {
         response = 'TURN_ON_LIGHT';
-    } else if (englishTokens.includes('turn') && englishTokens.includes('off') && englishTokens.includes('light')) {
+    } else if (command.toLowerCase().includes('turn') && command.toLowerCase().includes('off') && command.toLowerCase().includes('light')) {
         response = 'TURN_OFF_LIGHT';
     } else {
         response = 'Unknown_command';
     }
-    // Добавьте другие команды по аналогии...
-
-
-    localStorage.setItem('lastCommandResponse', response);
     return response;
 };
 
 app.get('/api/data', (req, res) => {
-    res.json(localStorage.getItem('lastCommandResponse'));
+    const lastCommandResponse = readCommandResultFromFile();
+    res.json({ lastCommandResponse });
 });
 
 app.post('/api/data', (req, res) => {
-    const { inputData } = req.body; // Предположим, что клиент отправляет данные в поле inputData
+    const { inputData } = req.body;
     console.log('Полученные данные:', inputData);
 
-    // Обрабатываем команду
-    const response = processCommand(inputData);
+    const commandResult = processCommand(inputData);
+    writeCommandResultToFile(commandResult);
 
-    // Делаем что-то с полученными данными, например, сохраняем их в базу данных
-    postData = response;
-
-    res.json({ success: true, response }); // Отправляем ответ клиенту
+    res.json({ success: true, response: commandResult });
 });
 
 app.get('*', (req, res) => {
