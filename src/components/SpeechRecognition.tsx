@@ -32,13 +32,12 @@ const SpeechRecognition: FC<IProps> = () => {
         };
 
         recognition.start();
-        setOutput('Слушаю...');
 
         // Сохраняем ссылку на объект распознавания
         recognitionRef.current = recognition;
     };
     useEffect(() => {
-        commandService.sendData(output)
+        commandService.sendData(JSON.stringify({command: output}))
     }, [output])
 
     const stopRecognition = () => {

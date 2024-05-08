@@ -14,7 +14,7 @@ app.use(express.json()); // Для обработки JSON-запросов
 let postData = null;
 
 app.get('/api/data', (req, res) => {
-    res.json(postData);
+    res.send({postData});
 });
 
 app.post('/api/data', (req, res) => {
