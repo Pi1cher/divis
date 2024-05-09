@@ -1,9 +1,11 @@
 import express from 'express';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 import path from 'path';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -27,20 +29,19 @@ const processCommand = (command) => {
     } else {
         response = 'Unknown_command';
     }
+
     return response;
 };
 
 app.get('/api/data', (req, res) => {
-    res.json({ commandResult });
+    res.json({commandResult});
 });
 
 app.post('/api/data', (req, res) => {
-    const { inputData } = req.body;
+    const {inputData} = req.body;
     console.log('Полученные данные:', inputData);
-
-     commandResult = processCommand(inputData);
-
-    res.json({ success: true, response: commandResult });
+    commandResult = processCommand(inputData)
+    res.json({success: true, response: commandResult});
 });
 
 app.get('*', (req, res) => {
@@ -50,3 +51,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
+
