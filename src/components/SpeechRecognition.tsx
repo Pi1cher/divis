@@ -1,7 +1,6 @@
 import {FC, PropsWithChildren, useState, useRef, useEffect} from 'react';
 import {IconButton} from '@mui/material';
 import css from './SpeechRecognition.module.css';
-import Icon from '@mui/material/Icon';
 import {commandService} from "../services/commandService";
 
 
@@ -38,9 +37,9 @@ const SpeechRecognition: FC<IProps> = () => {
         // Сохраняем ссылку на объект распознавания
         recognitionRef.current = recognition;
     };
-    useEffect(() => {
-        commandService.sendData(JSON.stringify({command: output}))
-    }, [output])
+    // useEffect(() => {
+    //     commandService.sendData(JSON.stringify({command: output}))
+    // }, [output])
 
     const stopRecognition = () => {
         if (recognitionRef.current) {
